@@ -2,8 +2,9 @@ class Field:
 
     SIGNS = ' XO'
 
-    def __init__(self, state=0):
+    def __init__(self, state=0, offset=0):
         self.state = state
+        self.offset = offset
 
     def __getitem__(self, arg):
         return self.state // 3**arg % 3
@@ -17,8 +18,8 @@ class Field:
     def ch(self, i, j):
         return Field.SIGNS[self[i + 3*j]]
 
-    def add(self, arg, offset=1):
-        return Field(self.state + 3**arg * offset)
+    def __add__(self, arg):
+        return Field(self.state + 3**arg * (self.offset+1), not self.offset)
 
 
 wins = (13, 351, 9477, 757, 2271, 6813, 6643, 819)
@@ -30,9 +31,11 @@ def check(field):
 
 
 def act(field, deep=0):
-    if deep == 6: return
     print('printf("\33c%s");' % field)
     if c := check(field):
+        print('return 0;')
+        return
+    if deep == 9:
         print('return 0;')
         return
     print('scanf("%d", &value);')
@@ -40,7 +43,7 @@ def act(field, deep=0):
     for i in range(9):
         if field[i]: continue
         print(f'case {i+1}:')
-        act(field.add(i, deep%2+1), deep+1)
+        act(field + i, deep+1)
         print('break;')
     print('default:')
     print('return 1;')
