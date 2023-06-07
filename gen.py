@@ -12,7 +12,7 @@ class Field:
         return '[%s]\n' % ']\n['.join(']['.join(self.ch(i, j) for i in range(3)) for j in range(3))
 
     def __and__(self, other):
-        return all(self[i] == other[i] for i in range(9))
+        return all(not other[i] or self[i] == other[i] for i in range(9))
 
     def ch(self, i, j):
         return Field.SIGNS[self[i + 3*j]]
