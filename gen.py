@@ -38,6 +38,7 @@ def act(field, deep=0):
     if deep == 9:
         print('return 0;')
         return
+    print('while (1) {')
     print('scanf("%d", &value);')
     print('switch (value) {')
     for i in range(9):
@@ -46,7 +47,8 @@ def act(field, deep=0):
         act(field + i, deep+1)
         print('break;')
     print('default:')
-    print('return 1;')
+    print('printf("\33[1A\33[K");')
+    print('}')
     print('}')
 
 
