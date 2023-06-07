@@ -31,7 +31,7 @@ def check(field):
 
 
 def act(field, deep=0):
-    print('printf("\33c%s");' % field)
+    print('printf("\\33c%s");' % field)
     if c := check(field):
         print('return 0;')
         return
@@ -47,7 +47,7 @@ def act(field, deep=0):
         act(field + i, deep+1)
         print('break;')
     print('default:')
-    print('printf("\33[1A\33[K");')
+    print('printf("\\33[1A\\33[K");')
     print('}')
     print('}')
 
