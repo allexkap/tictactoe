@@ -53,7 +53,19 @@ def act(field, deep=0):
 import sys
 sys.stdout = open('auto.c', 'w')
 
+indent = 0
+_print = print
+def print(*args, **kwargs):
+    global indent
+    if args[0][-1] == '}': indent -= 1
+    _print('\t' * indent, end='')
+    _print(*args, **kwargs)
+    if args[0][-1] == '{': indent += 1
+
+
 field = Field()
-print('#include <stdio.h>\nint main() {\nint value;')
+print('#include <stdio.h>')
+print('int main() {')
+print('int value;')
 act(field)
 print('}')
