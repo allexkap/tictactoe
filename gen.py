@@ -2,9 +2,9 @@ class Field:
 
     SIGNS = ' XO'
 
-    def __init__(self, state=0, offset=0):
+    def __init__(self, state=0, player=0):
         self.state = state
-        self.offset = offset
+        self.player = player
 
     def __getitem__(self, arg):
         return self.state // 3**arg % 3
@@ -19,7 +19,7 @@ class Field:
         return Field.SIGNS[self[i + 3*j]]
 
     def __add__(self, arg):
-        return Field(self.state + 3**arg * (self.offset+1), not self.offset)
+        return Field(self.state + 3**arg * (self.player+1), not self.player)
 
 
 wins = (13, 351, 9477, 757, 2271, 6813, 6643, 819)
