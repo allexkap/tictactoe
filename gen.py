@@ -40,15 +40,12 @@ def act(field, deep=0):
         return
     print('while (1) {')
     print('scanf("%d", &value);')
-    print('switch (value) {')
     for i in range(9):
         if field[i]: continue
-        print(f'case {i+1}:')
+        print('if (value == %d) {' % (i+1))
         act(field + i, deep+1)
-        print('break;')
-    print('default:')
+        print('}')
     print('printf("\\33[1A\\33[K");')
-    print('}')
     print('}')
 
 
@@ -59,4 +56,4 @@ sys.stdout = open('auto.c', 'w')
 field = Field()
 print('#include <stdio.h>\nint main() {\nint value;')
 act(field)
-print('return 2;\n}')
+print('}')
