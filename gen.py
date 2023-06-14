@@ -55,11 +55,14 @@ sys.stdout = open('auto.c', 'w')
 indent = 0
 _print = print
 def print(*args, **kwargs):
+    if len(args) != 1:
+        _print(*args, **kwargs)
+        return
     global indent
-    if args[0][-1] == '}': indent -= 1
+    indent -= args[0].count('}')
     _print('\t' * indent, end='')
     _print(*args, **kwargs)
-    if args[0][-1] == '{': indent += 1
+    indent += args[0].count('{')
 
 
 field = Field()
