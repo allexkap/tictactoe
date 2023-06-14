@@ -39,13 +39,12 @@ def act(field, deep=0):
         print('return 0;')
         return
     print('while (1) {')
-    print('scanf("%d", &value);')
+    print('value = getc(stdin) - \'0\';')
     for i in range(9):
         if field[i]: continue
         print('if (value == %d) {' % (i+1))
         act(field + i, deep+1)
         print('}')
-    print('printf("\\33[1A\\33[K");')
     print('}')
 
 
@@ -65,7 +64,12 @@ def print(*args, **kwargs):
 
 field = Field()
 print('#include <stdio.h>')
+print('#include <termios.h>')
 print('int main() {')
+print('struct termios termios_p;')
+print('tcgetattr(0, &termios_p);')
+print('termios_p.c_lflag &= ~(ECHO|ICANON);')
+print('tcsetattr(0, TCSANOW, &termios_p);')
 print('int value;')
 act(field)
 print('}')
