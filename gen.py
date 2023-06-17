@@ -22,6 +22,27 @@ class Field:
         return Field(self.state + 3**arg * (self.player+1), not self.player)
 
 
+class Indent:
+
+    def __init__(self, out, symbol='\t'):
+        self.out = out
+        self.symbol = symbol
+        self.indent = 0
+
+    def parse(self, line):
+        indent = self.indent if line else 0
+        self.indent += line.count('{') - line.count('}')
+        indent = min(self.indent, indent)
+        return f'{indent*self.symbol}{line}'
+
+    def write(self, arg):
+        return self.out.write('\n'.join(self.parse(line) for line in arg.split('\n')))
+
+    def flush(self):
+        return self.out.flush()
+
+
+
 wins = (13, 351, 9477, 757, 2271, 6813, 6643, 819)
 def check(field):
     for i in (1, 2):
@@ -50,19 +71,7 @@ def act(field, deep=0):
 
 
 import sys
-sys.stdout = open('auto.c', 'w')
-
-indent = 0
-_print = print
-def print(*args, **kwargs):
-    if len(args) != 1:
-        _print(*args, **kwargs)
-        return
-    global indent
-    indent -= args[0].count('}')
-    _print('\t' * indent, end='')
-    _print(*args, **kwargs)
-    indent += args[0].count('{')
+sys.stdout = Indent(open('auto.c', 'w'))
 
 
 field = Field()
