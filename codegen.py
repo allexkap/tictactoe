@@ -54,26 +54,24 @@ def check(field):
 
 def act(field, deep=0):
     print('printf("\\33c%s");' % field)
-    if c := check(field):
-        print('return 0;')
-        return
-    if deep == 9:
+    if check(field) or deep == 9:
         print('return 0;')
         return
     print('while (1) {')
-    print('value = getc(stdin) - \'0\';')
+    print('switch (getc(stdin)) {')
     for i in range(9):
         if field[i]:
             continue
-        print('if (value == %d) {' % (i + 1))
+        print('case %d: {' % (i + ord('1')))
         act(field + i, deep + 1)
         print('}')
+    print('}')
     print('}')
 
 
 import sys
 
-sys.stdout = Indent(open('auto.c', 'w'))
+sys.stdout = Indent(open('tictactoe.c', 'w'))
 
 
 field = Field()
@@ -84,6 +82,5 @@ print('struct termios termios_p;')
 print('tcgetattr(0, &termios_p);')
 print('termios_p.c_lflag &= ~(ECHO|ICANON);')
 print('tcsetattr(0, TCSANOW, &termios_p);')
-print('int value;')
 act(field)
 print('}')

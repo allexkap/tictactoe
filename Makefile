@@ -4,13 +4,11 @@ CC=gcc
 .PHONY: all clean
 
 
-all: auto
+all: tictactoe.c
+	$(CC) -o tictactoe tictactoe.c
 
-auto: auto.c
-	$(CC) -o auto auto.c
-
-auto.c: gen.py
-	$(PYTHON) gen.py
+tictactoe.c: codegen.py
+	$(PYTHON) codegen.py
 
 clean:
-	rm -f auto auto.c
+	rm -f tictactoe tictactoe.c
