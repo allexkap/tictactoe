@@ -1,5 +1,4 @@
 class Field:
-
     SIGNS = ' XO'
 
     def __init__(self, state=0, player=0):
@@ -10,20 +9,21 @@ class Field:
         return self.state // 3**arg % 3
 
     def __repr__(self):
-        return '[%s]\\n' % ']\\n['.join(']['.join(self.ch(i, j) for i in range(3)) for j in range(3))
+        return '[%s]\\n' % ']\\n['.join(
+            ']['.join(self.ch(i, j) for i in range(3)) for j in range(3)
+        )
 
     def __and__(self, other):
         return all(not other[i] or self[i] == other[i] for i in range(9))
 
     def ch(self, i, j):
-        return Field.SIGNS[self[i + 3*j]]
+        return Field.SIGNS[self[i + 3 * j]]
 
     def __add__(self, arg):
-        return Field(self.state + 3**arg * (self.player+1), not self.player)
+        return Field(self.state + 3**arg * (self.player + 1), not self.player)
 
 
 class Indent:
-
     def __init__(self, out, symbol='\t'):
         self.out = out
         self.symbol = symbol
@@ -42,11 +42,12 @@ class Indent:
         return self.out.flush()
 
 
-
 wins = (13, 351, 9477, 757, 2271, 6813, 6643, 819)
+
+
 def check(field):
     for i in (1, 2):
-        if any(field & Field(state*i) for state in wins):
+        if any(field & Field(state * i) for state in wins):
             return i
     return 0
 
@@ -62,15 +63,16 @@ def act(field, deep=0):
     print('while (1) {')
     print('value = getc(stdin) - \'0\';')
     for i in range(9):
-        if field[i]: continue
-        print('if (value == %d) {' % (i+1))
-        act(field + i, deep+1)
+        if field[i]:
+            continue
+        print('if (value == %d) {' % (i + 1))
+        act(field + i, deep + 1)
         print('}')
     print('}')
 
 
-
 import sys
+
 sys.stdout = Indent(open('auto.c', 'w'))
 
 
